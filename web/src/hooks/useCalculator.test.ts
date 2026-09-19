@@ -129,4 +129,21 @@ describe('useCalculator', () => {
     expect(result.current.display).toBe('9');
     expect(result.current.expression).toBe('');
   });
+
+  it('should preserve pending binary expression when applying unary operation', () => {
+    const { result } = renderHook(() => useCalculator());
+    act(() => result.current.inputDigit('5'));
+    act(() => result.current.inputDigit('0'));
+    act(() => result.current.setBinaryOperation('add'));
+    act(() => result.current.inputDigit('2'));
+    act(() => result.current.inputDigit('0'));
+    act(() => result.current.applyUnaryOperation('percentage'));
+    
+    expect(result.current.expression).toBe('50 +');
+    expect(result.current.display).toBe('0.2');
+
+    act(() => result.current.evaluate());
+    expect(result.current.display).toBe('50.2');
+    expect(result.current.expression).toBe('50 + 0.2 =');
+  });
 });

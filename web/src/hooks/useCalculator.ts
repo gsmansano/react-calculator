@@ -128,7 +128,11 @@ export const useCalculator = () => {
       setDisplay(String(result));
       setWaitingForOperand(true);
       setError(null);
-      setExpression('');
+      if (operation !== null && accumulator !== null) {
+        setExpression(`${accumulator} ${opSymbols[operation]}`);
+      } else {
+        setExpression('');
+      }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'UNKNOWN_ERROR');
       setWaitingForOperand(true);
