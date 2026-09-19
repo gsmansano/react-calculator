@@ -103,4 +103,16 @@ describe('useCalculator', () => {
     act(() => result.current.applyUnaryOperation('sqrt'));
     expect(result.current.error).toBe('INVALID_OPERAND');
   });
+
+  it('should automatically clear error on subsequent valid actions', () => {
+    const { result } = renderHook(() => useCalculator());
+    act(() => result.current.inputDigit('5'));
+    act(() => result.current.toggleSign());
+    act(() => result.current.applyUnaryOperation('sqrt'));
+    expect(result.current.error).toBe('INVALID_OPERAND');
+
+    // Trigger toggleSign should clear the error
+    act(() => result.current.toggleSign());
+    expect(result.current.error).toBeNull();
+  });
 });

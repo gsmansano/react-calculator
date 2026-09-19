@@ -48,6 +48,7 @@ export const useCalculator = () => {
   const [expression, setExpression] = useState<string>('');
 
   const inputDigit = (digit: string) => {
+    if (error) setError(null);
     if (waitingForOperand) {
       if (operation === null) {
         setExpression('');
@@ -60,6 +61,7 @@ export const useCalculator = () => {
   };
 
   const inputDecimal = () => {
+    if (error) setError(null);
     if (waitingForOperand) {
       if (operation === null) {
         setExpression('');
@@ -86,11 +88,13 @@ export const useCalculator = () => {
   };
 
   const toggleSign = () => {
+    if (error) setError(null);
     if (display === '0') return;
     setDisplay(prev => prev.startsWith('-') ? prev.substring(1) : '-' + prev);
   };
 
   const setBinaryOperation = (op: BinaryOperation) => {
+    if (error) setError(null);
     const inputValue = parseFloat(display);
 
     if (accumulator === null) {
@@ -123,6 +127,7 @@ export const useCalculator = () => {
       const result = localUnaryCalculate(inputValue, op);
       setDisplay(String(result));
       setWaitingForOperand(true);
+      setError(null);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'UNKNOWN_ERROR');
       setWaitingForOperand(true);
@@ -140,6 +145,7 @@ export const useCalculator = () => {
       setAccumulator(null);
       setOperation(null);
       setWaitingForOperand(true);
+      if (error) setError(null);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'UNKNOWN_ERROR');
       setAccumulator(null);
