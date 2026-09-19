@@ -1,3 +1,7 @@
 # Prompt Engineering & Execution Log
 
 This document records the user prompts, instructions, rationale, and execution phases across the development of the Sezzle Full-Stack Calculator starting from Milestone 1.
+
+### Prompt 1
+**Prompt:** Run the /initialize-context workflow, then execute the following 3 atomic setup steps for Milestone 1: Step 1: Create the `api/` directory and initialize `api/package.json` with TypeScript and test tooling: - Dependencies: `zod` (for upcoming schema validation). - DevDependencies: `typescript`, `@types/node`, `vitest`, `@vitest/coverage-v8`. - Scripts: `"build": "tsc"`, `"test": "vitest run"`, `"test:coverage": "vitest run --coverage"`. Step 2: Create `api/tsconfig.json` configured for strict TypeScript (ES2022/NodeNext, strict mode enabled, noImplicitAny, outDir `dist`). Step 3: Add a temporary sanity test file `api/src/sanity.test.ts` with a simple assertion, run `npm test` inside `api/` to verify the runner works, then remove the sanity file. Ensure you update `PROMPT_LOG.md` with: - The exact prompt text. - A concise 1-2 sentence summary of actions taken. Do not write the calculator domain logic yet. Pause and report back with the test runner output once verified.
+**Action Taken:** Scaffolded the backend `api/` workspace by initializing `package.json` with required dependencies (zod, typescript, vitest) and configuring `tsconfig.json` for strict TypeScript. Successfully ran and then removed a temporary sanity test to verify the test runner.
