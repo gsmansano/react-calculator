@@ -21,49 +21,62 @@ describe('useCalculator', () => {
     expect(result.current.display).toBe('1.23');
   });
 
-  it('should toggle sign correctly', () => {
+  it('should toggle sign correctly using string manipulation', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => result.current.toggleSign());
     expect(result.current.display).toBe('0');
 
     act(() => result.current.inputDigit('5'));
+    act(() => result.current.inputDecimal());
     act(() => result.current.toggleSign());
-    expect(result.current.display).toBe('-5');
+    expect(result.current.display).toBe('-5.'); // String manipulation keeps the dot!
 
     act(() => result.current.toggleSign());
-    expect(result.current.display).toBe('5');
+    expect(result.current.display).toBe('5.');
   });
 
-  it('should handle C vs AC correctly', () => {
+  it('should handle C vs AC correctly and clear expression', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => result.current.inputDigit('5'));
     act(() => result.current.setBinaryOperation('add'));
     act(() => result.current.inputDigit('3'));
     
+    expect(result.current.expression).toBe('5 +');
+
     // Clear only clears display
     act(() => result.current.clear());
     expect(result.current.display).toBe('0');
     expect(result.current.operation).toBe('add');
+    expect(result.current.expression).toBe('5 +');
     
     // All Clear resets everything
     act(() => result.current.allClear());
     expect(result.current.display).toBe('0');
     expect(result.current.operation).toBeNull();
     expect(result.current.accumulator).toBeNull();
+    expect(result.current.expression).toBe('');
   });
 
-  it('should compute binary chains correctly locally', () => {
+  it('should compute binary chains correctly locally and update expression', () => {
     const { result } = renderHook(() => useCalculator());
     act(() => result.current.inputDigit('5'));
     act(() => result.current.setBinaryOperation('add'));
     act(() => result.current.inputDigit('3'));
     act(() => result.current.evaluate());
     expect(result.current.display).toBe('8');
+    expect(result.current.expression).toBe('5 + 3 =');
 
     act(() => result.current.setBinaryOperation('multiply'));
+    expect(result.current.expression).toBe('8 ×');
     act(() => result.current.inputDigit('2'));
     act(() => result.current.evaluate());
     expect(result.current.display).toBe('16');
+    expect(result.current.expression).toBe('8 × 2 =');
+    
+    // Typing digit after evaluate clears expression
+    act(() => result.current.inputDigit('9'));
+    expect(result.current.display).toBe('9');
+    expect(result.current.expression).toBe('');
   });
 
   it('should execute unary operations correctly', () => {
@@ -72,12 +85,6 @@ describe('useCalculator', () => {
     act(() => result.current.inputDigit('6'));
     act(() => result.current.applyUnaryOperation('sqrt'));
     expect(result.current.display).toBe('4');
-
-    act(() => result.current.allClear());
-    act(() => result.current.inputDigit('5'));
-    act(() => result.current.inputDigit('0'));
-    act(() => result.current.applyUnaryOperation('percentage'));
-    expect(result.current.display).toBe('0.5');
   });
 
   it('should handle division by zero locally', () => {

@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#f1f5f5] text-[#0c1010] dark:bg-[#070909] dark:text-[#f0f4f4];
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+}

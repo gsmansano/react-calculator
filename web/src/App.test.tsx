@@ -11,20 +11,17 @@ describe('App Integration', () => {
     expect(screen.getAllByText('0').length).toBeGreaterThan(0);
   });
 
-  it('updates display on button clicks', () => {
+  it('updates display on button clicks and shows expression', () => {
     render(<App />);
     
-    // Click 7
     fireEvent.click(screen.getByText('7'));
-    // Click +
     fireEvent.click(screen.getByText('+'));
-    // Click 3
     fireEvent.click(screen.getByText('3'));
-    // Click =
     fireEvent.click(screen.getByText('='));
 
-    // Result should be 10
     expect(screen.getByText('10')).toBeInTheDocument();
+    // Verify expression
+    expect(screen.getByText('7 + 3 =')).toBeInTheDocument();
   });
 
   it('handles keyboard inputs', () => {
@@ -36,19 +33,17 @@ describe('App Integration', () => {
     fireEvent.keyDown(window, { key: 'Enter' });
 
     expect(screen.getByText('20')).toBeInTheDocument();
+    expect(screen.getByText('5 × 4 =')).toBeInTheDocument();
   });
 
   it('handles clear operations', () => {
     render(<App />);
 
-    // Type 9
     fireEvent.click(screen.getByText('9'));
     expect(screen.getAllByText('9').length).toBeGreaterThan(0);
 
-    // The 'C' button appears because isClearPending is true
     fireEvent.click(screen.getByText('C'));
     
-    // Should be '0' again, and AC should appear
     expect(screen.getByText('AC')).toBeInTheDocument();
   });
 });

@@ -16,16 +16,16 @@ interface KeypadProps {
 const Button: React.FC<{ 
   label: string | React.ReactNode; 
   onClick: () => void; 
-  variant?: 'default' | 'operator' | 'action' | 'equal';
+  variant?: 'digit' | 'binaryOp' | 'unaryOp' | 'equal';
   className?: string;
-}> = ({ label, onClick, variant = 'default', className = '' }) => {
-  const baseStyle = "relative flex items-center justify-center h-[72px] rounded-2xl text-2xl font-medium transition-all duration-200 active:scale-90 overflow-hidden group select-none";
+}> = ({ label, onClick, variant = 'digit', className = '' }) => {
+  const baseStyle = "relative flex items-center justify-center h-[72px] rounded-2xl text-2xl font-light tracking-tight tabular-nums transition-all duration-200 active:scale-95 overflow-hidden group select-none";
   
   const variants = {
-    default: "bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-700 shadow-[0_4px_10px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_10px_rgba(0,0,0,0.2)] border border-slate-100 dark:border-slate-700/50",
-    operator: "bg-indigo-50 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 shadow-[0_4px_10px_rgba(79,70,229,0.05)] border border-indigo-100/50 dark:border-indigo-800/30",
-    action: "bg-rose-50 dark:bg-rose-900/40 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/60 shadow-[0_4px_10px_rgba(225,29,72,0.05)] border border-rose-100/50 dark:border-rose-800/30",
-    equal: "bg-gradient-to-br from-indigo-500 to-purple-600 text-white hover:opacity-90 shadow-[0_8px_20px_rgba(79,70,229,0.3)] border border-indigo-400/20",
+    digit: "bg-[#ffffff] dark:bg-[#182121] text-[#0c1010] dark:text-[#f0f4f4] border border-[#c5d3d3] dark:border-[#1f2828] hover:bg-[#f0f5f5] dark:hover:bg-[#202c2c] shadow-[0_4px_10px_rgba(0,0,0,0.02)]",
+    binaryOp: "bg-[#aa96ad] dark:bg-[#67536a] text-[#ffffff] dark:text-[#ffffff] border border-transparent hover:bg-[#9d87a0] dark:hover:bg-[#755e78] shadow-[0_4px_10px_rgba(0,0,0,0.05)]",
+    unaryOp: "bg-[#b1aabc] dark:bg-[#4a4356] text-[#0c1010] dark:text-[#f0f4f4] border border-transparent hover:bg-[#a39bad] dark:hover:bg-[#574e64] shadow-[0_4px_10px_rgba(0,0,0,0.05)]",
+    equal: "bg-[#7c9899] dark:bg-[#678283] text-[#ffffff] border border-transparent hover:bg-[#6c898a] dark:hover:bg-[#577172] shadow-[0_8px_20px_rgba(0,0,0,0.15)]",
   };
 
   return (
@@ -51,37 +51,37 @@ export const Keypad: React.FC<KeypadProps> = ({
   return (
     <div className="grid grid-cols-4 gap-3">
       {/* Row 1 */}
-      <Button label={isClearPending ? 'C' : 'AC'} onClick={isClearPending ? onClear : onAllClear} variant="action" />
-      <Button label="+/-" onClick={onToggleSign} variant="operator" />
-      <Button label="%" onClick={() => onUnaryOp('percentage')} variant="operator" />
-      <Button label="÷" onClick={() => onBinaryOp('divide')} variant="operator" />
+      <Button label={isClearPending ? 'C' : 'AC'} onClick={isClearPending ? onClear : onAllClear} variant="unaryOp" />
+      <Button label="+/-" onClick={onToggleSign} variant="unaryOp" />
+      <Button label="%" onClick={() => onUnaryOp('percentage')} variant="unaryOp" />
+      <Button label="÷" onClick={() => onBinaryOp('divide')} variant="binaryOp" />
 
       {/* Row 2 */}
-      <Button label="7" onClick={() => onDigit('7')} />
-      <Button label="8" onClick={() => onDigit('8')} />
-      <Button label="9" onClick={() => onDigit('9')} />
-      <Button label="×" onClick={() => onBinaryOp('multiply')} variant="operator" />
+      <Button label="7" onClick={() => onDigit('7')} variant="digit" />
+      <Button label="8" onClick={() => onDigit('8')} variant="digit" />
+      <Button label="9" onClick={() => onDigit('9')} variant="digit" />
+      <Button label="×" onClick={() => onBinaryOp('multiply')} variant="binaryOp" />
 
       {/* Row 3 */}
-      <Button label="4" onClick={() => onDigit('4')} />
-      <Button label="5" onClick={() => onDigit('5')} />
-      <Button label="6" onClick={() => onDigit('6')} />
-      <Button label="−" onClick={() => onBinaryOp('subtract')} variant="operator" />
+      <Button label="4" onClick={() => onDigit('4')} variant="digit" />
+      <Button label="5" onClick={() => onDigit('5')} variant="digit" />
+      <Button label="6" onClick={() => onDigit('6')} variant="digit" />
+      <Button label="−" onClick={() => onBinaryOp('subtract')} variant="binaryOp" />
 
       {/* Row 4 */}
-      <Button label="1" onClick={() => onDigit('1')} />
-      <Button label="2" onClick={() => onDigit('2')} />
-      <Button label="3" onClick={() => onDigit('3')} />
-      <Button label="+" onClick={() => onBinaryOp('add')} variant="operator" />
+      <Button label="1" onClick={() => onDigit('1')} variant="digit" />
+      <Button label="2" onClick={() => onDigit('2')} variant="digit" />
+      <Button label="3" onClick={() => onDigit('3')} variant="digit" />
+      <Button label="+" onClick={() => onBinaryOp('add')} variant="binaryOp" />
 
       {/* Row 5 */}
-      <Button label="0" onClick={() => onDigit('0')} />
-      <Button label="." onClick={onDecimal} />
-      <Button label="√" onClick={() => onUnaryOp('sqrt')} variant="operator" />
+      <Button label="0" onClick={() => onDigit('0')} variant="digit" />
+      <Button label="." onClick={onDecimal} variant="digit" />
+      <Button label="√" onClick={() => onUnaryOp('sqrt')} variant="unaryOp" />
       <Button label="=" onClick={onEvaluate} variant="equal" />
       
       {/* Extra Row */}
-      <Button label="xʸ" onClick={() => onBinaryOp('power')} variant="operator" className="col-span-4" />
+      <Button label="xʸ" onClick={() => onBinaryOp('power')} variant="binaryOp" className="col-span-4" />
     </div>
   );
 };

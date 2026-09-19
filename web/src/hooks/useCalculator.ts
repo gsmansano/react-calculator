@@ -3,6 +3,14 @@ import { useState } from 'react';
 export type BinaryOperation = 'add' | 'subtract' | 'multiply' | 'divide' | 'power';
 export type UnaryOperation = 'sqrt' | 'percentage';
 
+const opSymbols: Record<BinaryOperation, string> = {
+  add: '+',
+  subtract: '−',
+  multiply: '×',
+  divide: '÷',
+  power: '^'
+};
+
 // Precision guard
 const normalizePrecision = (value: number): number => {
   return parseFloat(value.toFixed(10));
@@ -37,22 +45,29 @@ export const useCalculator = () => {
   const [operation, setOperation] = useState<BinaryOperation | null>(null);
   const [waitingForOperand, setWaitingForOperand] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [expression, setExpression] = useState<string>('');
 
   const inputDigit = (digit: string) => {
     if (waitingForOperand) {
+      if (operation === null) {
+        setExpression('');
+      }
       setDisplay(digit);
       setWaitingForOperand(false);
     } else {
-      setDisplay(display === '0' ? digit : display + digit);
+      setDisplay(prev => prev === '0' ? digit : prev + digit);
     }
   };
 
   const inputDecimal = () => {
     if (waitingForOperand) {
+      if (operation === null) {
+        setExpression('');
+      }
       setDisplay('0.');
       setWaitingForOperand(false);
-    } else if (display.indexOf('.') === -1) {
-      setDisplay(display + '.');
+    } else {
+      setDisplay(prev => prev.indexOf('.') === -1 ? prev + '.' : prev);
     }
   };
 
@@ -67,12 +82,12 @@ export const useCalculator = () => {
     setOperation(null);
     setWaitingForOperand(false);
     setError(null);
+    setExpression('');
   };
 
   const toggleSign = () => {
     if (display === '0') return;
-    const value = parseFloat(display);
-    setDisplay(String(value * -1));
+    setDisplay(prev => prev.startsWith('-') ? prev.substring(1) : '-' + prev);
   };
 
   const setBinaryOperation = (op: BinaryOperation) => {
@@ -80,11 +95,13 @@ export const useCalculator = () => {
 
     if (accumulator === null) {
       setAccumulator(inputValue);
+      setExpression(`${inputValue} ${opSymbols[op]}`);
     } else if (operation && !waitingForOperand) {
       try {
         const result = localCalculate(accumulator, inputValue, operation);
         setAccumulator(result);
         setDisplay(String(result));
+        setExpression(`${result} ${opSymbols[op]}`);
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : 'UNKNOWN_ERROR');
         setAccumulator(null);
@@ -92,6 +109,8 @@ export const useCalculator = () => {
         setWaitingForOperand(true);
         return;
       }
+    } else if (operation && waitingForOperand) {
+      setExpression(`${accumulator} ${opSymbols[op]}`);
     }
 
     setOperation(op);
@@ -116,6 +135,7 @@ export const useCalculator = () => {
     const inputValue = parseFloat(display);
     try {
       const result = localCalculate(accumulator, inputValue, operation);
+      setExpression(`${accumulator} ${opSymbols[operation]} ${display} =`);
       setDisplay(String(result));
       setAccumulator(null);
       setOperation(null);
@@ -134,6 +154,7 @@ export const useCalculator = () => {
     operation,
     waitingForOperand,
     error,
+    expression,
     inputDigit,
     inputDecimal,
     clear,

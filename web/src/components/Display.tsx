@@ -11,7 +11,7 @@ export const Display: React.FC<DisplayProps> = ({ value, expression, error }) =>
   const displayValue = value.length > 12 ? Number(value).toExponential(6) : value;
 
   return (
-    <div className="flex flex-col items-end justify-end p-6 bg-slate-100 dark:bg-slate-900 rounded-3xl shadow-[inset_0_-2px_10px_rgba(0,0,0,0.05)] dark:shadow-[inset_0_-2px_20px_rgba(0,0,0,0.5)] min-h-[160px] w-full transition-colors relative overflow-hidden">
+    <div className="flex flex-col items-end justify-end p-6 bg-[#ffffff] dark:bg-[#0b0e0e] rounded-3xl shadow-inner shadow-[inset_0_2px_12px_rgba(0,0,0,0.06)] dark:shadow-[inset_0_2px_20px_rgba(0,0,0,0.6)] min-h-[160px] w-full transition-colors relative overflow-hidden">
       {/* Premium glass effect overlay */}
       <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/10 dark:via-white/5 dark:to-white/10 pointer-events-none" />
       
@@ -23,12 +23,12 @@ export const Display: React.FC<DisplayProps> = ({ value, expression, error }) =>
       )}
 
       {/* Expression Sub-display */}
-      <div className="text-slate-500 dark:text-slate-400 font-mono text-sm tracking-widest min-h-[1.5rem] mb-2 opacity-80 transition-opacity flex items-center justify-end w-full overflow-hidden text-ellipsis whitespace-nowrap">
+      <div className="text-[#7c9899] dark:text-[#678283] font-mono text-sm tracking-widest min-h-[1.5rem] mb-2 opacity-80 transition-opacity flex items-center justify-end w-full overflow-hidden text-ellipsis whitespace-nowrap tabular-nums">
         {expression || ''}
       </div>
 
       {/* Main Value Display */}
-      <div className={`font-mono font-light text-slate-800 dark:text-slate-100 tracking-tight transition-all duration-300 ease-out w-full text-right break-all ${displayValue.length > 10 ? 'text-3xl' : 'text-5xl'} ${error ? 'text-red-500 dark:text-red-400 scale-95 opacity-90' : 'scale-100 opacity-100'}`}>
+      <div className={`font-mono font-light text-[#0c1010] dark:text-[#f0f4f4] tracking-tight tabular-nums transition-all duration-300 ease-out w-full text-right break-all ${displayValue.length > 10 ? 'text-4xl' : 'text-5xl'} ${error ? 'text-red-500 scale-95 opacity-90' : 'scale-100 opacity-100'}`}>
         {displayValue}
       </div>
     </div>

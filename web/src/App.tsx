@@ -7,9 +7,8 @@ import { useCalculator } from './hooks/useCalculator';
 export default function App() {
   const {
     display,
-    accumulator,
-    operation,
     error,
+    expression,
     inputDigit,
     inputDecimal,
     clear,
@@ -21,18 +20,6 @@ export default function App() {
   } = useCalculator();
 
   const isClearPending = display !== '0' || error !== null;
-
-  let expression = '';
-  if (accumulator !== null && operation) {
-    const opSymbol: Record<string, string> = {
-      add: '+',
-      subtract: '−',
-      multiply: '×',
-      divide: '÷',
-      power: 'xʸ'
-    };
-    expression = `${accumulator} ${opSymbol[operation]}`;
-  }
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -66,16 +53,16 @@ export default function App() {
   }, [inputDigit, inputDecimal, setBinaryOperation, evaluate, allClear, clear, applyUnaryOperation]);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center p-4 transition-colors duration-300">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 transition-colors duration-300">
       <div className="w-full max-w-sm flex flex-col items-center gap-6">
         
         {/* Header */}
-        <div className="w-full flex items-center justify-between px-2">
-          <h1 className="text-xl font-semibold text-slate-700 dark:text-slate-300 tracking-tight">Calculator</h1>
+        <div className="w-full flex items-center justify-center px-2">
+          <h1 className="text-3xl font-extrabold tracking-tight text-center text-[#0c1010] dark:text-[#f0f4f4]">Calculator</h1>
         </div>
 
         {/* Calculator Card */}
-        <div className="w-full bg-white dark:bg-slate-900 rounded-[2rem] shadow-[0_20px_40px_rgba(0,0,0,0.08)] dark:shadow-[0_20px_40px_rgba(0,0,0,0.4)] border border-slate-100 dark:border-slate-800/60 p-4">
+        <div className="w-full bg-[#d6e2e2] dark:bg-[#121616] border border-[#b4c6c6] dark:border-[#1f2828] shadow-2xl rounded-2xl p-6 transition-colors">
           <div className="mb-4">
             <Display value={display} expression={expression} error={error} />
           </div>
@@ -98,8 +85,8 @@ export default function App() {
         </div>
 
         {/* Footer */}
-        <footer className="mt-8 text-xs text-slate-400 dark:text-slate-600 font-medium">
-          Powered by React & Tailwind CSS
+        <footer className="mt-8 text-xs font-light text-slate-500 dark:text-slate-400">
+          Built by <a href="https://github.com/gsmansano" target="_blank" rel="noopener noreferrer" className="hover:underline font-medium text-[#0c1010] dark:text-[#f0f4f4]">Geovane Mansano</a>
         </footer>
 
       </div>
