@@ -115,4 +115,18 @@ describe('useCalculator', () => {
     act(() => result.current.toggleSign());
     expect(result.current.error).toBeNull();
   });
+
+  it('should clear completed expression when triggering unary operation', () => {
+    const { result } = renderHook(() => useCalculator());
+    act(() => result.current.inputDigit('9'));
+    act(() => result.current.setBinaryOperation('multiply'));
+    act(() => result.current.inputDigit('9'));
+    act(() => result.current.evaluate());
+    expect(result.current.display).toBe('81');
+    expect(result.current.expression).toBe('9 × 9 =');
+
+    act(() => result.current.applyUnaryOperation('sqrt'));
+    expect(result.current.display).toBe('9');
+    expect(result.current.expression).toBe('');
+  });
 });
