@@ -1,122 +1,108 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useEffect } from 'react';
+import { ThemeToggle } from './components/ThemeToggle';
+import { Display } from './components/Display';
+import { Keypad } from './components/Keypad';
+import { useCalculator } from './hooks/useCalculator';
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const {
+    display,
+    accumulator,
+    operation,
+    error,
+    inputDigit,
+    inputDecimal,
+    clear,
+    allClear,
+    toggleSign,
+    setBinaryOperation,
+    applyUnaryOperation,
+    evaluate
+  } = useCalculator();
+
+  const isClearPending = display !== '0' || error !== null;
+
+  let expression = '';
+  if (accumulator !== null && operation) {
+    const opSymbol: Record<string, string> = {
+      add: '+',
+      subtract: '−',
+      multiply: '×',
+      divide: '÷',
+      power: 'xʸ'
+    };
+    expression = `${accumulator} ${opSymbol[operation]}`;
+  }
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key >= '0' && e.key <= '9') {
+        inputDigit(e.key);
+      } else if (e.key === '.' || e.key === ',') {
+        inputDecimal();
+      } else if (e.key === '+') {
+        setBinaryOperation('add');
+      } else if (e.key === '-') {
+        setBinaryOperation('subtract');
+      } else if (e.key === '*') {
+        setBinaryOperation('multiply');
+      } else if (e.key === '/') {
+        setBinaryOperation('divide');
+        e.preventDefault();
+      } else if (e.key === 'Enter' || e.key === '=') {
+        evaluate();
+        e.preventDefault();
+      } else if (e.key === 'Escape') {
+        allClear();
+      } else if (e.key === 'Backspace') {
+        clear();
+      } else if (e.key === '%') {
+        applyUnaryOperation('percentage');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [inputDigit, inputDecimal, setBinaryOperation, evaluate, allClear, clear, applyUnaryOperation]);
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center p-4 transition-colors duration-300">
+      <div className="w-full max-w-sm flex flex-col items-center gap-6">
+        
+        {/* Header */}
+        <div className="w-full flex items-center justify-between px-2">
+          <h1 className="text-xl font-semibold text-slate-700 dark:text-slate-300 tracking-tight">Calculator</h1>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+        {/* Calculator Card */}
+        <div className="w-full bg-white dark:bg-slate-900 rounded-[2rem] shadow-[0_20px_40px_rgba(0,0,0,0.08)] dark:shadow-[0_20px_40px_rgba(0,0,0,0.4)] border border-slate-100 dark:border-slate-800/60 p-4">
+          <div className="mb-4">
+            <Display value={display} expression={expression} error={error} />
+          </div>
+          <Keypad
+            onDigit={inputDigit}
+            onDecimal={inputDecimal}
+            onClear={clear}
+            onAllClear={allClear}
+            onToggleSign={toggleSign}
+            onBinaryOp={setBinaryOperation}
+            onUnaryOp={applyUnaryOperation}
+            onEvaluate={evaluate}
+            isClearPending={isClearPending}
+          />
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        {/* Controls */}
+        <div className="mt-2">
+          <ThemeToggle />
+        </div>
+
+        {/* Footer */}
+        <footer className="mt-8 text-xs text-slate-400 dark:text-slate-600 font-medium">
+          Powered by React & Tailwind CSS
+        </footer>
+
+      </div>
+    </div>
+  );
 }
-
-export default App
