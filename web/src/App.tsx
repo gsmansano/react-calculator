@@ -17,13 +17,16 @@ export default function App() {
     toggleSign,
     setBinaryOperation,
     applyUnaryOperation,
-    evaluate
+    evaluate,
+    isLoading
   } = useCalculator();
 
   const isClearPending = display !== '0' || error !== null;
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (isLoading) return;
+
       if (e.key >= '0' && e.key <= '9') {
         inputDigit(e.key);
       } else if (e.key === '.' || e.key === ',') {
@@ -51,7 +54,7 @@ export default function App() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [inputDigit, inputDecimal, setBinaryOperation, evaluate, allClear, backspace, applyUnaryOperation]);
+  }, [inputDigit, inputDecimal, setBinaryOperation, evaluate, allClear, backspace, applyUnaryOperation, isLoading]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 transition-colors duration-300">
@@ -65,7 +68,7 @@ export default function App() {
         {/* Calculator Card */}
         <div className="w-full bg-[#d6e2e2] dark:bg-[#121616] border border-[#b4c6c6] dark:border-[#1f2828] shadow-2xl rounded-2xl p-6 transition-colors">
           <div className="mb-4">
-            <Display value={display} expression={expression} error={error} />
+            <Display value={display} expression={expression} error={error} isLoading={isLoading} />
           </div>
           <Keypad
             onDigit={inputDigit}
@@ -77,6 +80,7 @@ export default function App() {
             onUnaryOp={applyUnaryOperation}
             onEvaluate={evaluate}
             isClearPending={isClearPending}
+            disabled={isLoading}
           />
         </div>
 

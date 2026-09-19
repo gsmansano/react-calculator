@@ -11,7 +11,6 @@ export interface UnaryCalculationRequest {
 
 export interface CalculationResponse {
   result: number;
-  operation: string;
   formatted: string;
 }
 
@@ -35,37 +34,18 @@ export class CalculatorApiError extends Error {
 
 async function handleResponse(response: Response): Promise<CalculationResponse> {
   if (!response.ok) {
-    let errorData: unknown;
-    try {
-      errorData = await response.json();
-    } catch {
-      throw new CalculatorApiError('Failed to parse error response', 'NETWORK_ERROR', response.status);
-    }
-    
-    const errObj = typeof errorData === 'object' && errorData !== null ? (errorData as Record<string, unknown>) : {};
-    const message = typeof errObj.message === 'string' ? errObj.message : 'An unknown error occurred';
-    const code = typeof errObj.error === 'string' ? errObj.error : 'UNKNOWN_ERROR';
-    const status = typeof errObj.status === 'number' ? errObj.status : response.status;
-    
-    throw new CalculatorApiError(message, code, status);
+    const err = (await response.json().catch(() => ({}))) as Record<string, unknown>;
+    const message = typeof err.message === 'string' ? err.message : 'Server error';
+    const code = typeof err.error === 'string' ? err.error : 'UNKNOWN_ERROR';
+    throw new CalculatorApiError(message, code, response.status);
   }
 
-  let data: unknown;
-  try {
-    data = await response.json();
-  } catch {
-    throw new CalculatorApiError('Failed to parse success response', 'PARSE_ERROR', 500);
-  }
+  const data = (await response.json()) as { result: number };
 
-  // Type narrowing of the response object
-  if (typeof data === 'object' && data !== null) {
-    const resultObj = data as Record<string, unknown>;
-    if (typeof resultObj.result === 'number' && typeof resultObj.operation === 'string' && typeof resultObj.formatted === 'string') {
-      return data as CalculationResponse;
-    }
-  }
-
-  throw new CalculatorApiError('Invalid response format', 'PARSE_ERROR', 500);
+  return {
+    result: data.result,
+    formatted: String(data.result)
+  };
 }
 
 export const calculatorApi = {

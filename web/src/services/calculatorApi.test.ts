@@ -11,7 +11,7 @@ describe('calculatorApi', () => {
 
   describe('calculateBinary', () => {
     it('returns result on successful binary calculation', async () => {
-      const mockResponse = { result: 8, operation: 'add', formatted: '8' };
+      const mockResponse = { result: 8, formatted: '8' };
       (globalThis.fetch as any).mockResolvedValueOnce({
         ok: true,
         json: async () => mockResponse,
@@ -69,7 +69,7 @@ describe('calculatorApi', () => {
 
   describe('calculateUnary', () => {
     it('returns result on successful unary calculation', async () => {
-      const mockResponse = { result: 8, operation: 'sqrt', formatted: '8' };
+      const mockResponse = { result: 8, formatted: '8' };
       (globalThis.fetch as any).mockResolvedValueOnce({
         ok: true,
         json: async () => mockResponse,

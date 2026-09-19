@@ -4,9 +4,10 @@ interface DisplayProps {
   value: string;
   expression?: string | null;
   error?: string | null;
+  isLoading?: boolean;
 }
 
-export const Display: React.FC<DisplayProps> = ({ value, expression, error }) => {
+export const Display: React.FC<DisplayProps> = ({ value, expression, error, isLoading }) => {
   // Format long values cleanly
   const displayValue = value.length > 12 ? Number(value).toExponential(6) : value;
 
@@ -15,6 +16,14 @@ export const Display: React.FC<DisplayProps> = ({ value, expression, error }) =>
       {/* Premium glass effect overlay */}
       <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/10 dark:via-white/5 dark:to-white/10 pointer-events-none" />
       
+      {/* Loading Indicator */}
+      {isLoading && (
+        <div className="absolute top-4 right-4 flex items-center justify-center">
+          <div className="w-2 h-2 bg-[#7c9899] dark:bg-[#678283] rounded-full animate-ping opacity-75"></div>
+          <div className="w-2 h-2 bg-[#7c9899] dark:bg-[#678283] rounded-full absolute"></div>
+        </div>
+      )}
+
       {/* Error Badge */}
       {error && (
         <div className="absolute top-4 left-4 bg-red-100/90 dark:bg-red-900/40 text-red-600 dark:text-red-400 text-[11px] font-bold px-3 py-1 rounded-full animate-pulse border border-red-200 dark:border-red-800/50 shadow-sm uppercase tracking-wider backdrop-blur-sm">
