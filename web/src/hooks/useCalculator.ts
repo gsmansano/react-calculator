@@ -87,6 +87,19 @@ export const useCalculator = () => {
     setExpression('');
   };
 
+  const backspace = () => {
+    if (error || waitingForOperand) return;
+    if (display.length > 1) {
+      if (display.length === 2 && display.startsWith('-')) {
+        setDisplay('0');
+      } else {
+        setDisplay(display.slice(0, -1));
+      }
+    } else {
+      setDisplay('0');
+    }
+  };
+
   const toggleSign = () => {
     if (error) setError(null);
     if (display === '0') return;
@@ -170,6 +183,7 @@ export const useCalculator = () => {
     inputDecimal,
     clear,
     allClear,
+    backspace,
     toggleSign,
     setBinaryOperation,
     applyUnaryOperation,

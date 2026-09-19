@@ -78,10 +78,10 @@ export const Keypad: React.FC<KeypadProps> = ({
       <Button label="0" onClick={() => onDigit('0')} variant="digit" />
       <Button label="." onClick={onDecimal} variant="digit" />
       <Button label="√" onClick={() => onUnaryOp('sqrt')} variant="unaryOp" />
-      <Button label="=" onClick={onEvaluate} variant="equal" />
+      <Button label="xʸ" onClick={() => onBinaryOp('power')} variant="binaryOp" />
       
       {/* Extra Row */}
-      <Button label="xʸ" onClick={() => onBinaryOp('power')} variant="binaryOp" className="col-span-4" />
+      <Button label="=" onClick={onEvaluate} variant="equal" className="col-span-4" />
     </div>
   );
 };

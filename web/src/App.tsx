@@ -13,6 +13,7 @@ export default function App() {
     inputDecimal,
     clear,
     allClear,
+    backspace,
     toggleSign,
     setBinaryOperation,
     applyUnaryOperation,
@@ -42,7 +43,7 @@ export default function App() {
       } else if (e.key === 'Escape') {
         allClear();
       } else if (e.key === 'Backspace') {
-        clear();
+        backspace();
       } else if (e.key === '%') {
         applyUnaryOperation('percentage');
       }
@@ -50,7 +51,7 @@ export default function App() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [inputDigit, inputDecimal, setBinaryOperation, evaluate, allClear, clear, applyUnaryOperation]);
+  }, [inputDigit, inputDecimal, setBinaryOperation, evaluate, allClear, backspace, applyUnaryOperation]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 transition-colors duration-300">

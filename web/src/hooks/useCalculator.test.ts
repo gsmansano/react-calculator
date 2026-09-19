@@ -146,4 +146,38 @@ describe('useCalculator', () => {
     expect(result.current.display).toBe('50.2');
     expect(result.current.expression).toBe('50 + 0.2 =');
   });
+
+  describe('backspace', () => {
+    it('should delete the last character', () => {
+      const { result } = renderHook(() => useCalculator());
+      act(() => result.current.inputDigit('1'));
+      act(() => result.current.inputDigit('2'));
+      act(() => result.current.inputDigit('3'));
+      act(() => result.current.backspace());
+      expect(result.current.display).toBe('12');
+    });
+
+    it('should reset to 0 if a single digit or single negative digit remains', () => {
+      const { result } = renderHook(() => useCalculator());
+      act(() => result.current.inputDigit('5'));
+      act(() => result.current.backspace());
+      expect(result.current.display).toBe('0');
+
+      act(() => result.current.inputDigit('5'));
+      act(() => result.current.toggleSign());
+      expect(result.current.display).toBe('-5');
+      act(() => result.current.backspace());
+      expect(result.current.display).toBe('0');
+    });
+
+    it('should not mutate buffer if waiting for operand', () => {
+      const { result } = renderHook(() => useCalculator());
+      act(() => result.current.inputDigit('5'));
+      act(() => result.current.setBinaryOperation('add'));
+      expect(result.current.waitingForOperand).toBe(true);
+      expect(result.current.display).toBe('5');
+      act(() => result.current.backspace());
+      expect(result.current.display).toBe('5'); // unchanged
+    });
+  });
 });
